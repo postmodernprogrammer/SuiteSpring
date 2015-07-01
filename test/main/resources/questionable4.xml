@@ -1,0 +1,14 @@
+<beans>
+    <bean name="compLeaf" classname="foo.Composite">
+        <p name="myComp" value="comp2"/>
+    </bean>
+
+    <bean name="comp2" classname="foo.Composite">
+        <p name="composite" value="composite"/>
+    </bean>
+        
+    <bean name="composite" classname="foo.HolderHolder">
+        <p name="myInt" ref="intHolder"/>
+        <p name="theString" ref="stringHolder"/>
+    </bean>
+</beans>
