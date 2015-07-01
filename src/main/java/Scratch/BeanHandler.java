@@ -1,5 +1,6 @@
 package Scratch;
 
+import com.netledger.suitespring.BeanObj;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -26,26 +27,31 @@ public class BeanHandler extends DefaultHandler {
 
     @Override
     public void startElement(String uri,
-                             String localName, String qName, Attributes attributes)
+            String localName, String qName, Attributes attributes)
             throws SAXException {
-        System.out.println( "  BeanHandler Start" );
 
-        name = attributes.getValue("name");
-        System.out.println( "  Name: " + attributes.getValue("name"));
-        classname = attributes.getValue("classname");
-        if (qName == "p") {
-            reader.setContentHandler( new PHandler( reader, this) );
+        System.out.println("Bean Handler Start :" + qName);
+        
+        if ("p".equals(qName)) {
+            BeanObj b = parent.getCurrentBean();
+            b.putValue(attributes.getValue("name"), attributes.getValue("value"));
+            
+        } else {
+            System.out.println("Bean Handler Start Else: " + qName);
         }
+
     }
 
     @Override
     public void endElement(String uri,
-                           String localName, String qName)
+            String localName, String qName)
             throws SAXException {
 
-        System.out.println( "  BeanHandler End " + name + " " + classname  );
-        if (qName == "bean") {
+        System.out.println("  BeanHandler End " + name + " " + classname);
+        if ("bean".equals(qName)) {
             reader.setContentHandler(parent);
+        } else {
+            System.out.println("Bean Handler End Else: " + localName);
         }
     }
 

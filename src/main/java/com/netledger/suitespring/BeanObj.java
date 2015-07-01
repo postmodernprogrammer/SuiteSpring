@@ -40,4 +40,13 @@ public class BeanObj {
     public Map<String, String> getValues() {
         return values;
     }
+
+    public void putValue(String name, String value) {
+        values.put(name, value);
+    }
+
+    @Override
+    public String toString() {
+        return "BeanObj{" + "name=" + name + ", className=" + className + ", values=" + values + ", references=" + references + '}';
+    }
 }
