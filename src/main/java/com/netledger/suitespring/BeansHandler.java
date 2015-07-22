@@ -24,6 +24,10 @@ public class BeansHandler extends DefaultHandler {
         this.reader = reader;
     }
 
+    public List<BeanObj> getBeans() {
+        return beans;
+    }
+
     @Override
     public void startElement(String uri,
             String localName, String qName, Attributes attributes)
@@ -42,6 +46,7 @@ public class BeansHandler extends DefaultHandler {
                 System.out.println(current);
             }
             current = new BeanObj(name, classname);
+            beans.add(current);
 
             reader.setContentHandler(new BeanHandler(reader, this));
         } else {
