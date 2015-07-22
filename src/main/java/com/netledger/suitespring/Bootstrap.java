@@ -1,34 +1,34 @@
 package com.netledger.suitespring;
 
-import com.netledger.suitespring.BeanObj;
-import com.netledger.suitespring.BeansHandler;
+import org.xml.sax.XMLReader;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import java.io.File;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Created by bedwards on 01/07/15.
  */
 public class Bootstrap {
-    public Map<String, BeanObj> importFromXML(String filename) {
-        Map<String, BeanObj> beans = null;
 
+    public Map<String, BeanObj> importFromXML(String filename) {
+        SAXParserFactory factory = SAXParserFactory.newInstance();
         try {
+
             File inputFile = new File(filename);
-            SAXParserFactory factory = SAXParserFactory.newInstance();
             SAXParser saxParser = factory.newSAXParser();
 
-            BeansHandler handler  = new BeansHandler();
+            XMLReader reader = saxParser.getXMLReader();
+//            BeansHandler handler = new BeansHandler();
+            BeansHandler handler = new BeansHandler(reader);
             saxParser.parse(inputFile, handler);
-
-            beans = handler.getBeans();
+            System.out.println("Parse End");
 
         } catch (Exception e) {
-            System.err.println("Oh dear, something went horrible wrong: " + e.getMessage());
-        }
 
-        return beans;
+        }
+        return new HashMap<>();
     }
 }

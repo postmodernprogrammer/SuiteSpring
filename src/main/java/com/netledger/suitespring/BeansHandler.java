@@ -1,12 +1,12 @@
 package com.netledger.suitespring;
 
 import com.netledger.suitespring.BeanObj;
+import java.util.ArrayList;
+import org.xml.sax.XMLReader;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,43 +15,52 @@ import java.util.Map;
  */
 public class BeansHandler extends DefaultHandler {
 
-    private Map<String, BeanObj> beans = new HashMap<>();
-    private String name;
-    private String classname;
-    public Map<String, String> properties = new HashMap<>();
+    private final XMLReader reader;
 
-    public BeansHandler() {
-    }
+    private final List<BeanObj> beans = new ArrayList<>();
+    private BeanObj current = null;
 
-    public Map<String, BeanObj> getBeans() { return beans; }
-
-    @Override
-    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-        if (qName.equalsIgnoreCase("bean") ) {
-            name = attributes.getValue("name");
-            classname = attributes.getValue("classname");
-        }
-        else if (qName.equalsIgnoreCase("p")) {
-            String pName = attributes.getValue("name");
-            String pValue = attributes.getValue("value");
-            String pRef = attributes.getValue("ref");
-
-            if (pValue != null) {
-                properties.put(pName, pValue);
-            }
-            else if (pRef != null) {
-                properties.put(pName, pRef);
-            }
-        }
+    public BeansHandler(XMLReader reader) {
+        this.reader = reader;
     }
 
     @Override
-    public void endElement(String uri, String localName, String qName) throws SAXException {
-        if (qName.equals("bean")) {
-            Map<String, String> values = new HashMap<>(properties);
-            beans.put(name, new BeanObj(name, classname, values, new HashMap<>()));
+    public void startElement(String uri,
+            String localName, String qName, Attributes attributes)
+            throws SAXException {
+        System.out.println("BeansHandler Start :" + qName);
+        if ("bean".equals(qName)) {
+            // We have encountered a new bean tag
+            // Build up a new BeanObj object by setting a handler and doing 
+            // some setup of a working state object
+            String name = attributes.getValue("name");
+            String classname = attributes.getValue("classname");
 
-            properties.clear();
+            System.out.println("  Parsing: " + attributes.getValue("name") + " of type " + attributes.getValue("classname"));
+            if (current != null) {
+                System.out.println("Adding: " + current);
+                System.out.println(current);
+            }
+            current = new BeanObj(name, classname);
+
+            reader.setContentHandler(new BeanHandler(reader, this));
+        } else {
+            System.out.println("BeansHandler Else: " + qName);
         }
+
+    }
+
+    @Override
+    public void endElement(String uri,
+            String localName, String qName) throws SAXException {
+        if (current != null) {
+            beans.add(current);
+            System.out.println("Adding: " + current);
+        }
+        System.out.println("BeansHandler End");
+    }
+
+    public BeanObj getCurrentBean() {
+        return current;
     }
 }
