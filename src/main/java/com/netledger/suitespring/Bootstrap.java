@@ -27,7 +27,6 @@ public class Bootstrap {
             List<BeanObj> beans = handler.getBeans();
 
             saxParser.parse(inputFile, handler);
-            System.out.println("Parse End");
             for (BeanObj b : beans ) {
                 map.put(b.getName(),b);
             }

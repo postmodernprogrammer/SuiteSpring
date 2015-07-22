@@ -29,15 +29,11 @@ public class BeanHandler extends DefaultHandler {
     public void startElement(String uri,
             String localName, String qName, Attributes attributes)
             throws SAXException {
-
-        System.out.println("Bean Handler Start :" + qName);
-        
         if ("p".equals(qName)) {
             BeanObj b = parent.getCurrentBean();
             b.putValue(attributes.getValue("name"), attributes.getValue("value"));
             
         } else {
-            System.out.println("Bean Handler Start Else: " + qName);
         }
 
     }
@@ -46,12 +42,9 @@ public class BeanHandler extends DefaultHandler {
     public void endElement(String uri,
             String localName, String qName)
             throws SAXException {
-
-        System.out.println("  BeanHandler End " + name + " " + classname);
         if ("bean".equals(qName)) {
             reader.setContentHandler(parent);
         } else {
-            System.out.println("Bean Handler End Else: " + localName);
         }
     }
 
