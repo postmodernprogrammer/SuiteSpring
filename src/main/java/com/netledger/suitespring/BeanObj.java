@@ -39,12 +39,12 @@ public class BeanObj {
         return values;
     }
 
+    public void putValue(String name, String value) {
+        values.put(name, value);
+    }
+
     @Override
     public String toString() {
-        StringBuilder string = new StringBuilder();
-        string.append("Bean - name: ").append(name).append(", classname: ").append(className);
-        string.append("\n").append("     - properties: ").append(values);
-
-        return string.toString();
+        return "BeanObj{" + "name=" + name + ", className=" + className + ", values=" + values + ", references=" + references + '}';
     }
 }
